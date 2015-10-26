@@ -1,0 +1,254 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+  </head>
+  <body ng-app="app">
+<!-- <div class="container"> -->
+        <!-- NAVBAR -->
+        <nav id="social-sidebar">
+            <div id="navbarcontainer">    
+                <ul>
+                    <li>
+                        <a ng-click="redirectToHome()" class="entypo-navinfo"><img class="img" src="images/searchAgain.svg" id="view_search_panel" alt="Search with Flyer's Remorse">
+                            <span>BUSCAR NUEVAMENTE</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+            <div class="modal fade" id="loaderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <p>Cargando Tarifas...</p> 
+                    <div class="loader">
+                        <div class="loader2">
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <div class="container display-select">
+                <label>Mostrando ordenado por:</label>
+                <select class="" id="select-fares" ng-model="selectedLowestFare" ng-change="handleGraphs()">
+                  <option value="Tarifa mas economica" type="text" >Tarifa mas economica</option>
+                  <option value="Sin escalas mas economico" type="text" >Non Stop mas economico</option>
+                </select>
+            </div>
+
+            <div class="chart">
+                <div id="mainChart">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 col-md-4">
+                <p class="day-title">Dia seleccionado: </p>
+                <span class="day-value">{{choosenFare.date}}</span>
+            </div>
+                <div class="col-sm-3 col-md-2">
+                    <p class="fare-title">Tarifa mas baja</p>
+                    <span class="fare-value">{{choosenFare.minFare}} USD</span>
+                </div>
+                <div class="col-sm-3 col-md-2">
+                    <p class="fare-title">Tarifa mas alta</p>
+                    <span class="fare-value">{{choosenFare.maxFare}} USD</span>
+                </div>
+                <div class="col-sm-3 col-md-2">
+                    <p class="fare-title">Tarifa media</p>
+                    <span class="fare-value">{{choosenFare.medianFare}} USD</span>
+                </div>
+                <div class="col-sm-3 col-md-2">
+                    <p class="fare-title">{{selectedLowestFare}}</p>
+                    <span class="fare-value">{{selectedValue}} {{instaFlightResponse.PricedItineraries[0].AirItineraryPricingInfo.ItinTotalFare.TotalFare.CurrencyCode}}</span>
+                </div>
+            </div>
+
+            <div ng-class="{'hidden': isHiddenFlightsPanel}" class="panel flights-panel"  id="view-flights">
+                    <div class="row flights-panel-title">
+                        <div class="col-xs-3">
+                            <b>{{responseParams.origin}} - {{responseParams.arrival}}</b>
+                        </div>
+                        <div class="col-xs-5 flight-dates">
+                            Salida: {{choosenFare.date}} <br/>Regreso: {{instaFlightResponse.ReturnDateTime}}
+                        </div>
+                        <div class="col-xs-4 lowest-fare">{{selectedLowestFare}}: <b>{{selectedValue}} {{instaFlightResponse.PricedItineraries[0].AirItineraryPricingInfo.ItinTotalFare.TotalFare.CurrencyCode}}</b>
+                        </div>
+                        <div class="col-xs-2 button-right">
+                            <!-- <button class="btn close-button" ng-click="hideFlights()" id="abandon-flights-view">CLOSE</button> -->
+                        </div>
+                    </div>
+                <div class="row">
+                     <div class="panel-group" id="accordion">
+                        <div class="panel panel-default" ng-repeat="flight in myFlights">
+                            <div class="panel-heading vertical-center">
+                                <div class="panel-title row">
+                                    <div class="col-sm-3 flight-price" id="flight-price">
+                                         {{flight.totalFare}} {{flight.currency}}
+                                    </div>
+                                    <div class="col-sm-9 flight-info"  id="flight-info">     
+                                        <a data-target="#{{$index}}" data-toggle="collapse" data-parent="#accordion">
+                                            <div class="row">
+                                                <div class="col-sm-2">
+                                                    {{flight.carrier}} 
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    <b>{{flight.departureTime}}</b> {{flight.origin}}    ->   <b>{{flight.arrivalTime}}</b> {{flight.destination}}
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    {{flight.flightLength}}
+                                                </div>
+                                                <div class="col-xs-2">
+                                                   {{flight.noChanges}}
+                                                </div>
+                                                <div class="col-xs-2">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-2">
+                                                    {{flight.carrierB}}  
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    <b>{{flight.departureTimeB}}</b> {{flight.destination}}  ->   <b>{{flight.arrivalTimeB}}</b> {{flight.origin}}
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    {{flight.flightLengthB}}
+                                                </div>
+                                                <div class="col-xs-2">
+                                                   {{flight.noChangesB}}
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <img class="img" src="images/caret.svg">
+                                                </div>    
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-collapse collapse" id="{{$index}}">
+                                <div class="panel-body">
+                                    <div class="col-sm-3 flight-price" id="flight-price">
+                                        {{flight.totalFare}} {{flight.currency}}
+                                    </div>
+                                    <div class="col-sm-9"  id="flight-info-more">
+                                        <div class="route">
+                                            {{flight.origin}} - {{flight.destination}}
+                                        </div>   
+                                        <div ng-repeat="segment in flight.segments">
+                                            <div class="flight-no">
+                                                {{segment.airline}}  Vuelo nro. {{segment.airline}}{{segment.flightNo}}
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-4">
+                                                    D: <b>{{segment.departureTime}}</b> {{segment.departureAirport}}   
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    A: <b>{{segment.arrivalTime}}</b> {{segment.arrivalAirport}} 
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    {{segment.length}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="route">
+                                            {{flight.destination}} - {{flight.origin}}
+                                        </div>
+                                        <div ng-repeat="segment in flight.segmentsB">
+                                            <div class="flight-no">
+                                                {{segment.airline}}  Vuelo nro. {{segment.airline}}{{segment.flightNo}}
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-4">
+                                                    D: <b>{{segment.departureTime}}</b> {{segment.departureAirport}}   
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    A: <b>{{segment.arrivalTime}}</b> {{segment.arrivalAirport}} 
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    {{segment.length}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-body"> 
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>  </br>
+                    Sorry! We can't show you any flights for this request! </br>
+                  </div>
+                  <button ng-click="closeAlert()">CLOSE</button>
+                </div>
+              </div>
+            </div>
+
+    <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content about-text">
+          <div class="modal-body"> 
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>  </br>
+            <div>
+                 <h2>Welcome to <strong>Flyer's Remorse</strong>!</h2>
+            </div>
+            <div class="about-text" style="font-size: 11px; text-align:justify">
+                <p>Flyer's Remorse is an inspirational air shopping application. It uses several of REST APIs from Sabre Dev Studio.
+                </p>
+                <p>By clicking 'search' button the app makes a call based on user Search Criteria (Origin, Destination, Calendar Date Selection) to the following API's:<br/>
+                Lead Price Calendar - https://developer.sabre.com/docs/read/rest_apis/air/search/lead_price_calendar<br/>
+                Fare Range - https://developer.sabre.com/docs/read/rest_apis/air/intelligence/fare_range<br/>
+                InstaFlights Search - https://developer.sabre.com/docs/read/rest_apis/air/search/instaflights_search<br/>
+                </p>
+                <p>The results of the call to Lead Price Calendar and Fare Range are displayed on 2 month chart and present High, Low and Median Fare. Lowest and Lowest Nonstop Fare based on user choice are displayed as well.
+                </p>
+                <p>
+                The results of the call to InstaFlights Search are displayed on table and present list of InstaFlight options based on specific selection from user.
+                </p>
+            </div>
+            <div class="about-text" style="font-size: 11px;">
+                Developed by <a href="http://www.cometari.com/"><strong> Cometari </strong>Dedicated Solutions </a> 2015
+            </div>
+            </br>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <!-- </div> -->
+       
+        <script type="text/javascript">
+
+
+        </script>
+
+        <script>
+            function myFunction() {
+                location.reload();
+            };
+             function aboutFunction() {
+                $('#aboutModal').modal('show')
+            };
+        </script>
+
+    </body>
+    </html>

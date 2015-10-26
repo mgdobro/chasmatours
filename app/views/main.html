@@ -1,0 +1,76 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <!-- build:css(.) styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+</head>
+<body ng-app="app">
+  <div class="container">
+
+
+
+<div class="container title" align="middle">
+     <object width="550" height="400" data="images/logo-chasma.swf" align="middle"> </object>
+</div>
+
+
+<div class="container search-fields">
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+
+      <form class="form-horizontal">
+
+        <div class="form-group">
+          <label>Origen...</label>
+          <select ng-model="searchParams.origin" placeholder="DFW - Fort Worth International Airport - Dallas" type="text" id="origin_airport"></select>
+        </div>
+
+        <div class="form-group">
+          <label>Destino...</label>
+          <select ng-model="searchParams.arrival" placeholder="LAS - Mccarran International Airport - Las Vegas" type="text" id="arrival_airport"></select>
+        </div> 
+        <div>
+            <label>Seleccione fechas:</label>
+        </div>
+        <div class="input-daterange" id="calendar">
+          <span class="btn green-button-sm">Desde:</span>
+          <input ng-model="searchParams.departureDate" ng-model="!validateLengthOfStay()" type="text" class="input-small dark-input" />
+          <span class="btn green-button-sm">Hasta:</span>
+          <input ng-model="searchParams.arrivalDate" ng-model="!validateLengthOfStay()" type="text" class="input-small dark-input" />
+        </div>
+
+        <div class="form-group">
+<!-- 
+  <a href="#" class="btn green-button">{{searchParams.lengthOfStay}}</a> -->
+
+  <a ng-click="searchRequest()" class="btn green-button pull-right" ng-disabled="!validateLengthOfStay()">
+    <span><img src="images/search.svg"> BUSCAR</span>
+  </a>
+</div>
+
+</form>
+</div>
+</div>
+</div>
+<script>
+$('.input-daterange').datepicker({
+  format: 'yyyy-mm-dd',
+  startDate: 'today',
+  departureDate: '',
+  arrivalDate: '',
+  endDate: '+60d',
+  orientation: 'top left',
+  autoclose: true
+});
+</script>
+</body>
+</html>
